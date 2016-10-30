@@ -3,6 +3,8 @@ defmodule EveryColor.Distributor do
 
   alias EveryColor.GeneratorSupervisor
 
+  @used_colors EveryColor.Distributor.AllUSedColors
+
   @max 255*255*255
   @ranges 500
   @per_range @max/@ranges
@@ -14,6 +16,7 @@ defmodule EveryColor.Distributor do
   ## Init
 
   def start_link do
+    Agent.start_link(fn -> 0 end, name: @used_colors)
     GenServer.start_link(__MODULE__, distribute_work, name: __MODULE__)
   end
 
@@ -25,6 +28,7 @@ defmodule EveryColor.Distributor do
   ## Client Api
 
   def random_color do
+    bump_counter
     handler_pid = GenServer.call(__MODULE__, :get_color)
     EveryColor.GeneratorWorker.color(handler_pid)
   end
@@ -53,6 +57,14 @@ defmodule EveryColor.Distributor do
       ending = (elem+1)*@per_range
       trunc(start)..(trunc(ending)-1)
     end)
+  end
+
+  def bump_counter do
+    Agent.update(@used_colors, &(&1+1))
+  end
+
+  def get_counter do
+    Agent.get(@used_colors, &(&1))
   end
 
 end

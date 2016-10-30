@@ -1,7 +1,7 @@
 defmodule EveryColor.Endpoint do
   use Phoenix.Endpoint, otp_app: :every_color
 
-  socket "/socket", EveryColor.UserSocket
+  socket "/socket", EveryColor.ColorSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #

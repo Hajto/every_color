@@ -30,7 +30,6 @@ defmodule EveryColor.GeneratorWorker do
       [x | tail] ->
         {:reply, x, %RangeSet{state | cache: tail} }
       _ ->
-        IO.inspect state
         new_state = cache_pack(state.range)
         [head | tail] = new_state.cache
         {:reply, head, %RangeSet{new_state | cache: tail} }

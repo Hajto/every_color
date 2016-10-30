@@ -24,12 +24,12 @@ defmodule EveryColor.GeneratorWorkerTest do
 
   test "after cachce depletion gets more colors", %{worker: pid} do
     color_in_new_cache = 0..(Range.caching_step)
-    |> Enum.map(fn elem ->
+    |> Enum.map(fn _elem ->
       GeneratorWorker.color(pid)
     end)
     |> List.last
 
     assert color_in_new_cache == Range.caching_step + 1
-
   end
+
 end
