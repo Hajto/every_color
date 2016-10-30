@@ -29,14 +29,12 @@ defmodule EveryColor.GeneratorWorker do
       [x | tail] ->
         {:reply, x, %RangeSet{state | cache: tail} }
       _ ->
-        case cache_pack(state.range).cache do
-          [head | tail] ->
-            {:reply, head, %RangeSet{new_state | cache: tail} }
-          _ ->
-            EveryColor.Distributor.out_of_colors self
-            start.._ = state.range
-            {:reply, start, nil}
+        new_state = cache_pack(state.range)
+        [head | tail] = new_state.cache
+        if new_state.range  == nil do
+          EveryColor.Distributor.out_of_colors self
         end
+        {:reply, head, %RangeSet{new_state | cache: tail} }
     end
   end
 
