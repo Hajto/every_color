@@ -25,14 +25,18 @@ defmodule EveryColor.GeneratorWorker do
   ## Server Api
 
   def handle_call(:get_color, _caller, state) do
-    #IO.inspect "Cache length #{length(state.cache)}"
     case state.cache do
       [x | tail] ->
         {:reply, x, %RangeSet{state | cache: tail} }
       _ ->
-        new_state = cache_pack(state.range)
-        [head | tail] = new_state.cache
-        {:reply, head, %RangeSet{new_state | cache: tail} }
+        case cache_pack(state.range).cache do
+          [head | tail] ->
+            {:reply, head, %RangeSet{new_state | cache: tail} }
+          _ ->
+            EveryColor.Distributor.out_of_colors self
+            start.._ = state.range
+            {:reply, start, nil}
+        end
     end
   end
 

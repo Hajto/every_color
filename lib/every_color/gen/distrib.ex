@@ -33,11 +33,20 @@ defmodule EveryColor.Distributor do
     EveryColor.GeneratorWorker.color(handler_pid)
   end
 
+  def out_of_colors(pid) do
+    GenServer.cast(__MODULE__, {:remove_server, pid})
+  end
+
   ## Server Api
 
   def handle_call(:get_color, _caller, state) do
     {{:value, pid}, new_queue} = :queue.out(state)
     {:reply, pid, :queue.in(pid, new_queue)}
+  end
+
+  def handle_cast({:remove_server, pid}, state) do
+    filtered = :queue.filter(&(&1 != pid), state)
+    {:noreply, filtered}
   end
 
   ## Helpers
