@@ -63,6 +63,6 @@ erl_crash.dump
  .projectile
 
 
-priv/static
+priv/static/
 
 .DS_Store
