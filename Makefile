@@ -4,6 +4,4 @@ install:
 
 build:
 	cd ./web/static && npm run build && cd ../../
-	rm -rf ./priv/static
-	mkdir ./priv/static
-	cp -r ./web/static/build/ ./priv/static
+	mv ./web/static/build/ ./priv/static/
