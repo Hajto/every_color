@@ -5,7 +5,8 @@ defmodule EveryColor.Distributor do
 
   @used_colors EveryColor.Distributor.AllUSedColors
 
-  @max 255*255*255
+  #It will never reach last position
+  @max 256*256*256
   @ranges 500
   @per_range @max/@ranges
 
