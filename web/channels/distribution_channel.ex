@@ -1,18 +1,30 @@
 defmodule EveryColor.DistributionChannel do
   use Phoenix.Channel
 
-  def join("colors:*", _message, socket) do
-    send(self, :after_join)
-    {:ok, socket}
+  alias EveryColor.Distributor
+
+  def init do
+    IO.inspect "DZIALA KURWA"
+  end
+
+  def join("colors:"<>_ , _message, socket) do
+    #send(self, :after_join)
+    {:ok, %{color: Distributor.random_color, counter: Distributor.get_counter+1} ,socket}
   end
 
   def handle_info(:after_join, socket) do
-    push socket, "color_generated", %{color: EveryColor.Distributor.random_color}
+    broadcast_counter socket
+    push socket, "color_generated", %{color: Distributor.random_color}
     {:noreply, socket}
   end
 
   def handle_in("get", _payload, socket) do
-    {:reply, {:ok, %{color: EveryColor.Distributor.random_color}}, socket}
+    broadcast_counter socket
+    {:reply, {:ok, %{color: Distributor.random_color}}, socket}
+  end
+
+  def broadcast_counter(socket) do
+    broadcast socket, "counter_bump", %{counter: Distributor.get_counter+1}
   end
 
 end

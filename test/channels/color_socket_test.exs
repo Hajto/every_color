@@ -5,7 +5,7 @@ defmodule EveryColor.ColorSocketTest do
 
   test "Joins and receives a color" do
     {:ok, _, socket} = socket("user_id", %{some: :assign})
-      |> subscribe_and_join(DistributionChannel, "colors")
+      |> subscribe_and_join(DistributionChannel, "colors:test")
 
     assert_push "color_generated", %{color: _ }
 
