@@ -1,7 +1,7 @@
 defmodule EveryColor.DistributionChannel do
   use Phoenix.Channel
 
-  def join("colors", _message, socket) do
+  def join("colors:*", _message, socket) do
     send(self, :after_join)
     {:ok, socket}
   end
