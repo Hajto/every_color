@@ -1,9 +1,8 @@
 install:
 	mix deps.get
-	cd ./web/static && npm install && cd ../../
+	cd ./web/static && yarn && cd ../../
 
 build:
 	cd ./web/static && npm run build && cd ../../
-	rm -rf ./priv/static
-	mkdir ./priv/static
-	cp -r ./web/static/build/ ./priv/static
+	rm -rf ./priv/static/
+	mv ./web/static/build/ ./priv/static/
