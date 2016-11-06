@@ -9,6 +9,11 @@ First clone front-end repo as well:
 git submodule update --init --recursive
 ```
 
+or by Makefile:
+```
+make subrepo
+```
+
 Next you can install both Elixir and Node dependencies:
 
 ```

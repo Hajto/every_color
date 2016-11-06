@@ -1,8 +1,11 @@
+subrepo:
+	git submodule update --init --recursive
+
 install:
 	mix deps.get
-	cd ./web/static && yarn && cd ../../
+	cd ./front && yarn && cd ../
 
 build:
-	cd ./web/static && npm run build && cd ../../
+	cd ./front && yarn build && cd ../
 	rm -rf ./priv/static/
-	mv ./web/static/build/ ./priv/static/
+	mv ./front/build/ ./priv/static/
