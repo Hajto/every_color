@@ -4,12 +4,16 @@ defmodule EveryColor.ColorSocketTest do
   alias EveryColor.DistributionChannel
 
   test "Joins and receives a color" do
-    {:ok, _, socket} = socket("user_id", %{some: :assign})
+    {:ok, reply , socket} = socket("user_id", %{some: :assign})
       |> subscribe_and_join(DistributionChannel, "colors:test")
 
-    assert_push "color_generated", %{color: _ }
+    %{color: color, counter: counter} = reply
+    assert is_number color
+    assert is_number counter
 
-    ref = push socket, "get", "whatever payload"
+    assert_broadcast "counter_bump", %{counter: ^counter}
+
+    ref = push socket, "get", %{}
     assert_reply ref, :ok, %{color: _ }
   end
 end

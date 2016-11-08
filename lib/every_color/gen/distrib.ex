@@ -23,7 +23,7 @@ defmodule EveryColor.Distributor do
 
   def init(processes) do
     #IO.inspect "Starting distributor"
-    {:ok, :queue.from_list processes }
+    {:ok, processes }
   end
 
   ## Client Api
@@ -41,12 +41,11 @@ defmodule EveryColor.Distributor do
   ## Server Api
 
   def handle_call(:get_color, _caller, state) do
-    {{:value, pid}, new_queue} = :queue.out(state)
-    {:reply, pid, :queue.in(pid, new_queue)}
+    {:reply, Enum.random(state), state}
   end
 
   def handle_cast({:remove_server, pid}, state) do
-    filtered = :queue.filter(&(&1 != pid), state)
+    filtered = Enum.filter(&(&1 != pid), state)
     {:noreply, filtered}
   end
 
